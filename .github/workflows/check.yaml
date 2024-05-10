@@ -1,0 +1,26 @@
+name: rough
+on:
+  push:
+    branches:
+      - *
+  pull_request:
+    branches:
+      - *
+  workflow_dispatch:
+
+jobs:
+  docker_image-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+
+      - name: Get Merge commit of PR
+        run: |
+          Merge_Commit=$(curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.GHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls/${{ matrix.pr_number }}" | jq -r '.merge_commit_sha')
+          echo "Merge_Commit=$Merge_Commit" >> $GITHUB_ENV
+
+      - name: Build and Push Docker image for Scheduler-svc
+        run: |
+          echo "king={{ env.Merge_Commit }}"
