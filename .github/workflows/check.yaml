@@ -24,3 +24,4 @@ jobs:
       - name: Build and Push Docker image for Scheduler-svc
         run: |
           echo "king={{ env.Merge_Commit }}"
+          
